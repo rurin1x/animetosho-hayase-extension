@@ -56,6 +56,7 @@ function queryParams(query = {}, mode = 'single', options = {}) {
     title: titles[0],
     titles: titles.slice(1),
     resolution: query.resolution || undefined,
+    sort: 'date',
     limit: limit(options)
   }
 
