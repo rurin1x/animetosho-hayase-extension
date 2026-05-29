@@ -32,7 +32,7 @@ function requestUrl(endpoint, params = {}, options = {}) {
       url.searchParams.set(key, String(value))
     }
   }
-  return url
+  return url.toString()
 }
 
 async function firstNzbUrl(requestFetch, params, options = {}) {
@@ -50,7 +50,13 @@ async function firstNzbUrl(requestFetch, params, options = {}) {
 async function searchByTitleFallback(query = {}, options = {}) {
   if (!options.allowTitleFallback) return undefined
 
-  const titles = uniqueTitles(query.titles)
+  const mediaTitle = query.media?.title?.romaji || query.media?.title?.english || query.media?.title?.native
+  const titles = uniqueTitles([
+    ...(Array.isArray(query.titles) ? query.titles : []),
+    query.title,
+    query.name,
+    mediaTitle
+  ])
   if (!titles.length && !query.name) return undefined
 
   const requestFetch = query.fetch || globalThis.fetch

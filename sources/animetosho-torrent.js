@@ -41,11 +41,17 @@ function requestUrl(endpoint, params = {}, options = {}) {
       url.searchParams.set(key, String(value))
     }
   }
-  return url
+  return url.toString()
 }
 
 function queryParams(query = {}, mode = 'single', options = {}) {
-  const titles = uniqueTitles(query.titles)
+  const mediaTitle = query.media?.title?.romaji || query.media?.title?.english || query.media?.title?.native
+  const titles = uniqueTitles([
+    ...(Array.isArray(query.titles) ? query.titles : []),
+    query.title,
+    query.name,
+    mediaTitle
+  ])
   const params = {
     title: titles[0],
     titles: titles.slice(1),
